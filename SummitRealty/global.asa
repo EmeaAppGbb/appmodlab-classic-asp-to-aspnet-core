@@ -1,0 +1,29 @@
+<SCRIPT LANGUAGE="VBScript" RUNAT="Server">
+Sub Application_OnStart
+    Application("AppName") = "Summit Realty Group"
+    Application("Version") = "1.0"
+    Application("StartTime") = Now()
+    Application("ActiveUsers") = 0
+End Sub
+
+Sub Application_OnEnd
+    ' Cleanup
+End Sub
+
+Sub Session_OnStart
+    Application.Lock
+    Application("ActiveUsers") = Application("ActiveUsers") + 1
+    Application.Unlock
+    Session.Timeout = 30
+    Session("Authenticated") = False
+    Session("UserID") = 0
+    Session("Username") = ""
+    Session("Role") = ""
+End Sub
+
+Sub Session_OnEnd
+    Application.Lock
+    Application("ActiveUsers") = Application("ActiveUsers") - 1
+    Application.Unlock
+End Sub
+</SCRIPT>
