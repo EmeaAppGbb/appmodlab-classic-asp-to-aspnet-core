@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SummitRealtyWeb.Data;
 using SummitRealtyWeb.Middleware;
 using SummitRealtyWeb.Models;
+using SummitRealtyWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,12 @@ builder.Services.AddAntiforgery(options =>
     options.HeaderName = "X-CSRF-TOKEN";
 });
 
+// Application services
+builder.Services.AddScoped<PropertyService>();
+builder.Services.AddScoped<AgentService>();
+builder.Services.AddScoped<InquiryService>();
+builder.Services.AddScoped<AdminService>();
+
 var app = builder.Build();
 
 // === Middleware Pipeline ===
@@ -80,5 +87,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+// Seed database in development
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<SummitRealtyContext>();
+    await context.Database.EnsureCreatedAsync();
+    await SeedData.InitializeAsync(context);
+}
 
 app.Run();
