@@ -1,0 +1,47 @@
+@page
+@model SummitRealtyWeb.Pages.Admin.UsersModel
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<h2>User Management</h2>
+
+<div class="mb-3">
+    <a asp-page="/Account/Register" class="btn btn-primary">Add New User</a>
+</div>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Last Login</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>
+                    @foreach (var role in user.Roles)
+                    {
+                        <span class="badge bg-info text-dark">@role</span>
+                    }
+                </td>
+                <td>@(user.LastLogin?.ToString("g") ?? "Never")</td>
+                <td>
+                    @if (user.IsLockedOut)
+                    {
+                        <span class="badge bg-danger">Locked</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

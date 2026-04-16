@@ -92,9 +92,12 @@ app.MapRazorPages();
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<SummitRealtyContext>();
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<SummitRealtyContext>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     await context.Database.EnsureCreatedAsync();
-    await SeedData.InitializeAsync(context);
+    await SeedData.InitializeAsync(context, userManager, roleManager);
 }
 
 app.Run();

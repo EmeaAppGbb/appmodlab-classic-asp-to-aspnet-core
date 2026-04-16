@@ -1,12 +1,63 @@
+using Microsoft.AspNetCore.Identity;
 using SummitRealtyWeb.Models;
 
 namespace SummitRealtyWeb.Data;
 
 public static class SeedData
 {
-    public static async Task InitializeAsync(SummitRealtyContext context)
+    public static async Task InitializeAsync(
+        SummitRealtyContext context,
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager)
     {
-        if (context.Agents.Any()) return; // Already seeded
+        // Seed roles
+        string[] roles = ["Admin", "Agent"];
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        // Seed default admin user
+        const string adminEmail = "admin@summitrealty.com";
+        if (await userManager.FindByEmailAsync(adminEmail) == null)
+        {
+            // Ensure agent record exists for admin before creating user
+            if (!context.Agents.Any(a => a.Email == adminEmail))
+            {
+                context.Agents.Add(new Agent
+                {
+                    FirstName = "System",
+                    LastName = "Administrator",
+                    Email = adminEmail,
+                    Phone = "(555) 000-0000",
+                    LicenseNumber = "RE-ADMIN-001",
+                    Bio = "System administrator account.",
+                    HireDate = DateTime.UtcNow
+                });
+                await context.SaveChangesAsync();
+            }
+
+            var adminAgent = context.Agents.First(a => a.Email == adminEmail);
+
+            var adminUser = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true,
+                AgentId = adminAgent.AgentId
+            };
+
+            var result = await userManager.CreateAsync(adminUser, "Admin@Summit2026!");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+        }
+
+        if (context.Agents.Count(a => a.Email != adminEmail) > 0) return; // Already seeded agents
 
         var agents = new List<Agent>
         {
