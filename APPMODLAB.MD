@@ -8,13 +8,28 @@ services: ["Azure App Service", "Azure SQL Database", "Azure Blob Storage", "Azu
 languages: [".NET", "JavaScript"]
 frameworks: ["ASP.NET Core", "Entity Framework Core", "Razor Pages"]
 modernizationTools: []
-agenticTools: []
+agenticTools: ["GitHub Copilot CLI"]
 tags: ["vbscript", "security-remediation", "ado-to-efcore", "sql-injection-fix"]
 extensions: ["github.copilot"]
 thumbnail: ""
 video: ""
 version: "1.0.0"
 ---
+
+## Lab Solution
+
+The completed modernization is on the [`solution-final`](../../tree/solution-final) branch with step-by-step tags:
+
+| Step | Tag | Description |
+|------|-----|-------------|
+| 01 | `step-01-explore-asp` | Analyze Classic ASP pages, VBScript, includes, database schema |
+| 02 | `step-02-security-assessment` | Identify XSS, SQL injection, session, and credential vulnerabilities |
+| 03 | `step-03-design-architecture` | Map ASP pages to Razor Pages/MVC, design EF Core models |
+| 04 | `step-04-scaffold-project` | Scaffold ASP.NET Core 8 project with Razor Pages and Identity |
+| 05 | `step-05-migrate-data` | Convert ADO/inline SQL to Entity Framework Core services |
+| 06 | `step-06-migrate-pages` | Convert 13 ASP pages to Razor Pages with Tag Helpers |
+| 07 | `step-07-authentication` | Replace session auth with ASP.NET Core Identity |
+| 08 | `step-08-build-test` | Build verification, security audit, migration completeness |
 
 ## Initial Application Screenshots
 
