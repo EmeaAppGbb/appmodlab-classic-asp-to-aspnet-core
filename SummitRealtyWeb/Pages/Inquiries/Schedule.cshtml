@@ -1,0 +1,68 @@
+@page
+@model SummitRealtyWeb.Pages.Inquiries.ScheduleModel
+@{
+    ViewData["Title"] = "Schedule a Property Viewing";
+}
+
+<h1>Schedule a Property Viewing</h1>
+
+@if (Model.PropertyAddress != null)
+{
+    <h4 class="text-muted">Property: @Model.PropertyAddress</h4>
+}
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">@Model.SuccessMessage</div>
+}
+else
+{
+    <p>Schedule an appointment to view this property. One of our agents will confirm your appointment.</p>
+}
+
+<form method="post" style="max-width: 600px;">
+    <input type="hidden" asp-for="Input.PropertyId" />
+    <div class="mb-3">
+        <label asp-for="Input.ClientName" class="form-label fw-bold">Your Name</label>
+        <input asp-for="Input.ClientName" class="form-control" required />
+        <span asp-validation-for="Input.ClientName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.ClientEmail" class="form-label fw-bold">Email</label>
+        <input asp-for="Input.ClientEmail" class="form-control" type="email" required />
+        <span asp-validation-for="Input.ClientEmail" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.AppointmentDate" class="form-label fw-bold">Preferred Date</label>
+        <input asp-for="Input.AppointmentDate" class="form-control" type="date" required />
+        <span asp-validation-for="Input.AppointmentDate" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.AppointmentTime" class="form-label fw-bold">Preferred Time</label>
+        <select asp-for="Input.AppointmentTime" class="form-select" required>
+            <option value="">Select Time</option>
+            <option value="09:00">9:00 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="12:00">12:00 PM</option>
+            <option value="13:00">1:00 PM</option>
+            <option value="14:00">2:00 PM</option>
+            <option value="15:00">3:00 PM</option>
+            <option value="16:00">4:00 PM</option>
+            <option value="17:00">5:00 PM</option>
+        </select>
+        <span asp-validation-for="Input.AppointmentTime" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Notes" class="form-label fw-bold">Notes</label>
+        <textarea asp-for="Input.Notes" class="form-control" rows="4"></textarea>
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn text-white fw-bold" style="background-color: #003366;">Schedule Appointment</button>
+        <a href="javascript:history.back()" class="btn btn-secondary fw-bold">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

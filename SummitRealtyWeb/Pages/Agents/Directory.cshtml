@@ -1,0 +1,44 @@
+@page
+@model SummitRealtyWeb.Pages.Agents.DirectoryModel
+@{
+    ViewData["Title"] = "Our Real Estate Agents";
+}
+
+<h1>Our Real Estate Agents</h1>
+<p class="lead">Meet our team of experienced real estate professionals dedicated to helping you find your dream home.</p>
+
+<div class="row">
+    @foreach (var agent in Model.Agents)
+    {
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="row g-0">
+                    <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
+                        @if (!string.IsNullOrEmpty(agent.PhotoPath))
+                        {
+                            <img src="@agent.PhotoPath" alt="@agent.FullName"
+                                 class="rounded-circle border border-2" style="width: 150px; height: 150px; object-fit: cover; border-color: #003366 !important;">
+                        }
+                        else
+                        {
+                            <img src="/images/no-agent-photo.jpg" alt="Agent Photo"
+                                 class="rounded-circle border border-2" style="width: 150px; height: 150px; object-fit: cover; border-color: #003366 !important;">
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h3 class="card-title mb-2">@agent.FullName</h3>
+                            <p class="mb-1"><strong>Email:</strong> <a href="mailto:@agent.Email">@agent.Email</a></p>
+                            <p class="mb-2"><strong>Phone:</strong> @agent.Phone</p>
+                            @if (!string.IsNullOrEmpty(agent.Bio))
+                            {
+                                <p class="card-text">@(agent.Bio.Length > 150 ? agent.Bio[..150] + "..." : agent.Bio)</p>
+                            }
+                            <a asp-page="/Agents/Profile" asp-route-id="@agent.AgentId" class="btn btn-sm text-white" style="background-color: #003366;">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

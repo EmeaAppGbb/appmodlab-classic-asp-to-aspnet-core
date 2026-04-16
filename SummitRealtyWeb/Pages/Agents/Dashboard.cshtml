@@ -1,0 +1,94 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@model SummitRealtyWeb.Pages.Agents.DashboardModel
+@{
+    ViewData["Title"] = "Agent Dashboard";
+}
+
+<h1>Agent Dashboard</h1>
+<p class="lead">Welcome back, @User.Identity?.Name!</p>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center" style="background-color: #e6f2ff;">
+            <div class="card-body">
+                <h2 class="card-title mb-0" style="color: #003366;">@Model.Stats.ActiveListings</h2>
+                <p class="card-text">Active Listings</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center" style="background-color: #e6ffe6;">
+            <div class="card-body">
+                <h2 class="card-title mb-0" style="color: #006600;">@Model.Stats.TotalPortfolioValue.ToString("C0")</h2>
+                <p class="card-text">Portfolio Value</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center" style="background-color: #fff0e6;">
+            <div class="card-body">
+                <h2 class="card-title mb-0" style="color: #cc6600;">@Model.Stats.PendingInquiries</h2>
+                <p class="card-text">Pending Inquiries</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center" style="background-color: #ffe6f0;">
+            <div class="card-body">
+                <h2 class="card-title mb-0" style="color: #cc0066;">@Model.Stats.UpcomingShowings</h2>
+                <p class="card-text">Upcoming Showings</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>Quick Actions</h2>
+<div class="mb-4">
+    <a asp-page="/Inquiries/Contact" class="btn fw-bold me-2" style="background-color: #cc6600; color: white;">View Inquiries</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-page="/Admin/Reports" class="btn fw-bold" style="background-color: #006600; color: white;">View Reports</a>
+    }
+</div>
+
+<h2>Recent Inquiries</h2>
+
+@if (Model.Stats.RecentInquiries.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Property</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var inquiry in Model.Stats.RecentInquiries)
+            {
+                <tr>
+                    <td>@inquiry.InquiryDate.ToString("MMM d, yyyy")</td>
+                    <td>@inquiry.ClientName</td>
+                    <td>
+                        @if (inquiry.Property != null)
+                        {
+                            <a asp-page="/Listings/Detail" asp-route-id="@inquiry.PropertyId">@inquiry.Property.Address</a>
+                        }
+                        else
+                        {
+                            <em>General Inquiry</em>
+                        }
+                    </td>
+                    <td>@inquiry.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">No recent inquiries.</p>
+}

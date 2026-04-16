@@ -1,0 +1,48 @@
+@page
+@model SummitRealtyWeb.Pages.Inquiries.ContactModel
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<h1>Contact Us</h1>
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">@Model.SuccessMessage</div>
+}
+else
+{
+    <p class="lead">Have a question about a property or our services? Fill out the form below and one of our agents will get back to you.</p>
+}
+
+<form method="post" style="max-width: 600px;">
+    <input type="hidden" asp-for="Input.PropertyId" />
+    <div class="mb-3">
+        <label asp-for="Input.ClientName" class="form-label fw-bold">Your Name</label>
+        <input asp-for="Input.ClientName" class="form-control" required />
+        <span asp-validation-for="Input.ClientName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.ClientEmail" class="form-label fw-bold">Email</label>
+        <input asp-for="Input.ClientEmail" class="form-control" type="email" required />
+        <span asp-validation-for="Input.ClientEmail" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.ClientPhone" class="form-label fw-bold">Phone</label>
+        <input asp-for="Input.ClientPhone" class="form-control" />
+        <span asp-validation-for="Input.ClientPhone" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Message" class="form-label fw-bold">Message</label>
+        <textarea asp-for="Input.Message" class="form-control" rows="6" required></textarea>
+        <span asp-validation-for="Input.Message" class="text-danger"></span>
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn text-white fw-bold" style="background-color: #003366;">Send Inquiry</button>
+        <button type="reset" class="btn btn-secondary fw-bold">Clear Form</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

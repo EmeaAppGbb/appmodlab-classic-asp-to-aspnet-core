@@ -1,0 +1,134 @@
+@page "{id:int}"
+@model SummitRealtyWeb.Pages.Listings.DetailModel
+@{
+    ViewData["Title"] = Model.Property != null ? Model.Property.Address : "Property Not Found";
+}
+
+@if (Model.Property == null)
+{
+    <div class="alert alert-danger">Property not found.</div>
+}
+else
+{
+    <h1>@Model.Property.Address</h1>
+    <h4 class="text-muted">@Model.Property.City, @Model.Property.State @Model.Property.ZipCode</h4>
+
+    <div class="row mt-4">
+        <div class="col-md-7">
+            <h2>Property Details</h2>
+            <table class="table table-bordered">
+                <tr>
+                    <th class="bg-light" style="width: 30%;">Price</th>
+                    <td><span class="fw-bold fs-4" style="color: #003366;">@Model.Property.Price.ToString("C0")</span></td>
+                </tr>
+                <tr>
+                    <th class="bg-light">Property Type</th>
+                    <td>@Model.Property.PropertyType</td>
+                </tr>
+                <tr>
+                    <th class="bg-light">Bedrooms</th>
+                    <td>@Model.Property.Bedrooms</td>
+                </tr>
+                <tr>
+                    <th class="bg-light">Bathrooms</th>
+                    <td>@Model.Property.Bathrooms</td>
+                </tr>
+                <tr>
+                    <th class="bg-light">Square Feet</th>
+                    <td>@Model.Property.SquareFeet sq ft</td>
+                </tr>
+                <tr>
+                    <th class="bg-light">Status</th>
+                    <td>@Model.Property.Status</td>
+                </tr>
+                <tr>
+                    <th class="bg-light">Listed</th>
+                    <td>@Model.Property.ListingDate.ToString("MMMM d, yyyy")</td>
+                </tr>
+            </table>
+
+            <h3>Description</h3>
+            <p>@Model.Property.Description</p>
+
+            <h3>Property Photos</h3>
+            @if (Model.Property.Photos.Any())
+            {
+                <div class="row">
+                    @foreach (var photo in Model.Property.Photos)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <img src="@photo.FilePath" class="img-fluid rounded border" alt="@photo.Caption" style="height: 150px; object-fit: cover; width: 100%;">
+                            @if (!string.IsNullOrEmpty(photo.Caption))
+                            {
+                                <small class="text-muted d-block text-center">@photo.Caption</small>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No photos available for this property.</p>
+            }
+        </div>
+
+        <div class="col-md-5">
+            <div class="border-start ps-4">
+                <h2>Contact Agent</h2>
+                <div class="text-center mb-3">
+                    @if (!string.IsNullOrEmpty(Model.Property.Agent.PhotoPath))
+                    {
+                        <img src="@Model.Property.Agent.PhotoPath" alt="@Model.Property.Agent.FullName"
+                             class="rounded-circle border border-2" style="width: 150px; height: 150px; object-fit: cover; border-color: #003366 !important;">
+                    }
+                    else
+                    {
+                        <img src="/images/no-agent-photo.jpg" alt="Agent Photo"
+                             class="rounded-circle border border-2" style="width: 150px; height: 150px; object-fit: cover; border-color: #003366 !important;">
+                    }
+                    <h4 class="mt-2">@Model.Property.Agent.FullName</h4>
+                </div>
+                <table class="table table-sm">
+                    <tr>
+                        <th>Email</th>
+                        <td><a href="mailto:@Model.Property.Agent.Email">@Model.Property.Agent.Email</a></td>
+                    </tr>
+                    <tr>
+                        <th>Phone</th>
+                        <td>@Model.Property.Agent.Phone</td>
+                    </tr>
+                </table>
+
+                <h4>Request Information</h4>
+                <form method="post" asp-page="/Inquiries/Contact" asp-route-propertyId="@Model.Property.PropertyId">
+                    <input type="hidden" name="PropertyId" value="@Model.Property.PropertyId" />
+                    <div class="mb-3">
+                        <label for="clientName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="clientName" name="ClientName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="clientEmail" name="ClientEmail" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientPhone" class="form-label">Phone</label>
+                        <input type="text" class="form-control" id="clientPhone" name="ClientPhone" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" name="Message" rows="5" required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn text-white fw-bold" style="background-color: #003366;">Send Inquiry</button>
+                    </div>
+                </form>
+
+                <h4 class="mt-4">Schedule Viewing</h4>
+                <div class="text-center">
+                    <a asp-page="/Inquiries/Schedule" asp-route-propertyId="@Model.Property.PropertyId"
+                       class="btn fw-bold" style="background-color: #ffcc00; color: #003366;">Schedule Appointment</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,89 @@
+@page "{id:int}"
+@model SummitRealtyWeb.Pages.Agents.ProfileModel
+@{
+    ViewData["Title"] = Model.Agent != null ? Model.Agent.FullName : "Agent Not Found";
+}
+
+@if (Model.Agent == null)
+{
+    <div class="alert alert-danger">Agent not found.</div>
+}
+else
+{
+    <div class="row mb-4">
+        <div class="col-md-3 text-center">
+            @if (!string.IsNullOrEmpty(Model.Agent.PhotoPath))
+            {
+                <img src="@Model.Agent.PhotoPath" alt="@Model.Agent.FullName"
+                     class="rounded-circle border border-3" style="width: 200px; height: 200px; object-fit: cover; border-color: #003366 !important;">
+            }
+            else
+            {
+                <img src="/images/no-agent-photo.jpg" alt="Agent Photo"
+                     class="rounded-circle border border-3" style="width: 200px; height: 200px; object-fit: cover; border-color: #003366 !important;">
+            }
+        </div>
+        <div class="col-md-9">
+            <h1>@Model.Agent.FullName</h1>
+            <table class="table table-sm" style="max-width: 400px;">
+                <tr>
+                    <th>Email</th>
+                    <td><a href="mailto:@Model.Agent.Email">@Model.Agent.Email</a></td>
+                </tr>
+                <tr>
+                    <th>Phone</th>
+                    <td>@Model.Agent.Phone</td>
+                </tr>
+                <tr>
+                    <th>License #</th>
+                    <td>@Model.Agent.LicenseNumber</td>
+                </tr>
+                <tr>
+                    <th>With Summit Since</th>
+                    <td>@Model.Agent.HireDate.ToString("MMMM d, yyyy")</td>
+                </tr>
+            </table>
+
+            <h4>About @Model.Agent.FirstName</h4>
+            <p>@Model.Agent.Bio</p>
+        </div>
+    </div>
+
+    <h2>Current Listings</h2>
+
+    @if (Model.Agent.Properties.Any())
+    {
+        <div class="row">
+            @foreach (var property in Model.Agent.Properties)
+            {
+                var photo = property.Photos.FirstOrDefault();
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        @if (photo != null)
+                        {
+                            <img src="@photo.FilePath" class="card-img-top" alt="Property Photo" style="height: 180px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <img src="/images/no-photo.jpg" class="card-img-top" alt="No Photo Available" style="height: 180px; object-fit: cover;">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@property.Address</h5>
+                            <p class="card-text text-muted mb-1">@property.City, @property.State</p>
+                            <p class="card-text fw-bold fs-5 mb-1" style="color: #003366;">@property.Price.ToString("C0")</p>
+                            <p class="card-text">@property.Bedrooms BD | @property.Bathrooms BA | @property.SquareFeet sq ft</p>
+                            <p class="card-text">@property.PropertyType</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a asp-page="/Listings/Detail" asp-route-id="@property.PropertyId" class="btn btn-sm text-white" style="background-color: #003366;">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">This agent currently has no active listings.</p>
+    }
+}

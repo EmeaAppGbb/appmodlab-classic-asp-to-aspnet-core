@@ -1,10 +1,52 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mb-4">
+    <h1 class="display-4">Welcome to Summit Realty Group</h1>
+    <p class="lead">Discover your dream home from our exclusive collection of premium properties.</p>
+</div>
+
+<h2>Featured Properties</h2>
+
+<div class="row">
+    @foreach (var property in Model.FeaturedProperties)
+    {
+        var photo = property.Photos.FirstOrDefault();
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                @if (photo != null)
+                {
+                    <img src="@photo.FilePath" class="card-img-top" alt="Property Photo" style="height: 200px; object-fit: cover;">
+                }
+                else
+                {
+                    <img src="/images/no-photo.jpg" class="card-img-top" alt="No Photo Available" style="height: 200px; object-fit: cover;">
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@property.Address</h5>
+                    <p class="card-text text-muted">@property.City, @property.State</p>
+                    <p class="card-text fw-bold fs-5" style="color: #003366;">@property.Price.ToString("C0")</p>
+                    <p class="card-text">
+                        @property.Bedrooms BD | @property.Bathrooms BA | @property.SquareFeet sq ft
+                    </p>
+                    <p class="card-text"><small>@property.PropertyType</small></p>
+                    @if (property.Description != null)
+                    {
+                        <p class="card-text"><small class="text-muted">@(property.Description.Length > 100 ? property.Description[..100] + "..." : property.Description)</small></p>
+                    }
+                    <p class="card-text"><strong>Agent:</strong> @property.Agent.FullName</p>
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-page="/Listings/Detail" asp-route-id="@property.PropertyId" class="btn text-white" style="background-color: #003366;">View Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="text-center mt-3">
+    <a asp-page="/Listings/Search" class="btn btn-lg fw-bold" style="background-color: #ffcc00; color: #003366;">Browse All Properties</a>
 </div>

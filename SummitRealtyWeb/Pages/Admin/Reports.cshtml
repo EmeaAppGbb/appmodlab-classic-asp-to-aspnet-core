@@ -1,0 +1,129 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "AdminOnly")]
+@model SummitRealtyWeb.Pages.Admin.ReportsModel
+@{
+    ViewData["Title"] = "Reports & Analytics";
+}
+
+<h1>Reports &amp; Analytics</h1>
+
+<h2>Summary Statistics</h2>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center" style="background-color: #e6f2ff;">
+            <div class="card-body">
+                <h2 class="card-title mb-0" style="color: #003366;">@Model.Report.TotalProperties</h2>
+                <p class="card-text">Total Properties</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center" style="background-color: #e6ffe6;">
+            <div class="card-body">
+                <h2 class="card-title mb-0" style="color: #006600;">@Model.Report.ActiveProperties</h2>
+                <p class="card-text">Active Listings</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center" style="background-color: #fff0e6;">
+            <div class="card-body">
+                <h2 class="card-title mb-0" style="color: #cc6600;">@Model.Report.TotalAgents</h2>
+                <p class="card-text">Total Agents</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center" style="background-color: #ffe6f0;">
+            <div class="card-body">
+                <h2 class="card-title mb-0" style="color: #cc0066;">@Model.Report.TotalInquiries</h2>
+                <p class="card-text">Total Inquiries</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>Properties by Agent</h2>
+
+<table class="table table-bordered table-striped mb-4">
+    <thead class="table-light">
+        <tr>
+            <th>Agent Name</th>
+            <th class="text-center">Active Listings</th>
+            <th class="text-end">Total Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var agent in Model.Report.PropertiesByAgent)
+        {
+            <tr>
+                <td>@agent.AgentName</td>
+                <td class="text-center">@agent.ActiveListings</td>
+                <td class="text-end">@agent.TotalValue.ToString("C0")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Properties by Type</h2>
+
+<table class="table table-bordered table-striped mb-4" style="max-width: 600px;">
+    <thead class="table-light">
+        <tr>
+            <th>Property Type</th>
+            <th class="text-center">Count</th>
+            <th class="text-end">Average Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var type in Model.Report.PropertiesByType)
+        {
+            <tr>
+                <td>@type.PropertyType</td>
+                <td class="text-center">@type.Count</td>
+                <td class="text-end">@type.AveragePrice.ToString("C0")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Recent Inquiries</h2>
+
+<table class="table table-bordered table-striped mb-4">
+    <thead class="table-light">
+        <tr>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Property</th>
+            <th>Agent</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var inquiry in Model.Report.RecentInquiries)
+        {
+            <tr>
+                <td>@inquiry.InquiryDate.ToString("MMM d, yyyy")</td>
+                <td>@inquiry.ClientName</td>
+                <td>
+                    @if (inquiry.Property != null)
+                    {
+                        @($"{inquiry.Property.Address}, {inquiry.Property.City}")
+                    }
+                    else
+                    {
+                        <em>General Inquiry</em>
+                    }
+                </td>
+                <td>@inquiry.Agent.FullName</td>
+                <td>@inquiry.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p class="mt-3">
+    <a asp-page="/Agents/Dashboard" class="btn btn-secondary">Back to Dashboard</a>
+</p>
