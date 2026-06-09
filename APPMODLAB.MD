@@ -11,7 +11,7 @@ modernizationTools: []
 agenticTools: ["GitHub Copilot CLI"]
 tags: ["vbscript", "security-remediation", "ado-to-efcore", "sql-injection-fix"]
 extensions: ["github.copilot"]
-thumbnail: ""
+thumbnail: "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-classic-asp-to-aspnet-core/main/assets/thumbnail-gpt-image.png"
 video: ""
 version: "1.0.0"
 ---
